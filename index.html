@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEP | 913. The Snowman. Quiz 1</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .quiz-container {
+            max-width: 600px;
+            margin: 20px auto;
+        }
+
+        .word, .meaning, .sentence, .question {
+            margin: 10px 0; /* Adjusted to include all relevant classes */
+        }
+
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .answers {
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+
+        .correct {
+            color: green;
+        }
+
+        .incorrect {
+            color: red;
+        }
+
+        select {
+            max-width: 100%;
+            box-sizing: border-box;
+            margin-top: 2px;
+            display: block;         
+        }        
+
+    </style>
+</head>
+<body>
+
+<div class="hero bg-light text-center py-5">
+    <div class="container">
+        <h1 class="display-4">Luke’s ENGLISH Podcast</h1>
+        <h3><a href="https://teacherluke.co.uk/2024/12/17/913-the-snowman-learn-english-with-a-short-story/" target="_blank" class="link-primary">913. The Snowman (Learn English with a Short Story)</a></h3>
+    </div>
+</div>
+
+<div id="app1" class="quiz-container">
+    <h4>Quiz 1 / Part 1: Matching</h4>
+    <h5>Match the word or phrase to its meaning.</h5>
+    <div v-for="(word, index) in words" :key="index" class="word">
+        <label>{{ index + 1 }}. {{ word.text }}</label>
+        <select v-model="userAnswers[index]">
+            <option value="">Select Meaning</option>
+            <option v-for="(meaning, mIndex) in meanings" :key="mIndex" :value="meaning.text">
+                {{ meaning.text }}
+            </option>
+        </select>
+    </div>
+    <button class="btn btn-primary" @click="checkAnswers">Check Answers</button>
+    <div class="result">{{ resultMessage }}</div>
+    
+    <div class="answers" v-if="showCorrectAnswers">
+        <h3>Answers:</h3>
+        <p><em>(Green indicates correct answers, red indicates wrong answers)</em></p>
+        <ul>
+            <li v-for="(word, index) in words" :key="index">
+                {{ word.text }}: 
+                <span :class="{'correct': userAnswers[index] === correctAnswers[index], 'incorrect': userAnswers[index] !== correctAnswers[index]}">
+                    {{ correctAnswers[index] }}
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script>
+new Vue({
+    el: '#app1',
+    data: {
+        words: [
+            { text: 'Remote' },
+            { text: 'Isolated' },
+            { text: 'Initially' },
+            { text: 'Uncanny' },
+            { text: 'Mere' },
+            { text: 'Déjà vu' },
+            { text: 'A sense of childhood nostalgia' },
+            { text: 'To gaze' }
+        ],
+        meanings: [
+            { text: 'A. Strange and mysterious, often in a way that feels almost supernatural.' },
+            { text: 'B. A feeling of familiarity with a situation, as if it has happened before.' },
+            { text: 'C. Far away from other places, people, or civilization.' },
+            { text: 'D. Alone or disconnected from others.' },
+            { text: 'E. Only; nothing more than.' },
+            { text: 'F. At the beginning.' },
+            { text: 'G. A longing for or fond memories of one’s younger years.' },
+            { text: 'H. To look steadily and intently, often in admiration or deep thought.' }
+        ],
+        userAnswers: Array(8).fill(''),
+        correctAnswers: [
+            'C. Far away from other places, people, or civilization.', // Remote
+            'D. Alone or disconnected from others.', // Isolated
+            'F. At the beginning.', // Initially
+            'A. Strange and mysterious, often in a way that feels almost supernatural.', // Uncanny
+            'E. Only; nothing more than.', // Mere
+            'B. A feeling of familiarity with a situation, as if it has happened before.', // Déjà vu
+            'G. A longing for or fond memories of one’s younger years.', // A sense of childhood nostalgia
+            'H. To look steadily and intently, often in admiration or deep thought.' // To gaze
+        ],
+        showCorrectAnswers: false
+    },
+    computed: {
+        resultMessage() {
+            if (!this.showCorrectAnswers) {
+                return '';
+            }
+            let score = 0;
+            this.userAnswers.forEach((answer, index) => {
+                if (answer === this.correctAnswers[index]) {
+                    score++;
+                }
+            });
+            return `You got ${score} out of ${this.words.length} correct!`;
+        }
+    },
+    methods: {
+        checkAnswers() {
+            this.showCorrectAnswers = true;
+        }
+    }
+});
+</script>
+
+
+<!--------------------->
+
+<div id="app2" class="quiz-container">
+    <h4>Quiz 1 / Part 2: Fill in the Blanks</h4>
+    <div v-for="(sentence, index) in sentences" :key="index" class="sentence">
+        <label>{{ index + 9 }}. {{ sentence.text }}</label>
+        <input type="text" v-model="userAnswers[index]" placeholder="Your answer here" />
+    </div>
+    <button class="btn btn-primary" @click="checkAnswers">Check Answers</button>
+    <div class="result">{{ resultMessage }}</div>
+    
+    <div class="answers" v-if="showCorrectAnswers">
+        <h3>Answers:</h3>
+        <p><em>(Green indicates correct answers, red indicates wrong answers)</em></p>
+        <ul>
+            <li v-for="(sentence, index) in sentences" :key="index">
+                {{ index + 9 }}. 
+                <span :class="{'correct': userAnswers[index].trim().toLowerCase() === correctAnswers[index].toLowerCase(), 'incorrect': userAnswers[index].trim().toLowerCase() !== correctAnswers[index].toLowerCase()}">
+                    {{ correctAnswers[index] }}
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script>
+new Vue({
+    el: '#app2',
+    data: {
+        sentences: [
+            { text: 'The climbers reached the ______ of the mountain after a long, difficult journey.' },
+            { text: 'From the ______ of the valley, we could see the houses dotted across the hills.' },
+            { text: '______, I thought it was a good idea, but I later changed my mind.' },
+            { text: 'She was staring out of the window, overwhelmed by a ______ of childhood nostalgia.' },
+            { text: '______ surprise, the restaurant was still open despite the late hour.' },
+            { text: 'The strange coincidence left me with an ______ feeling.' },
+            { text: 'I couldn’t put my ______ on what was bothering me about the situation.' },
+            { text: 'He told me the news, but I didn’t give it much ______.' },
+            { text: 'For no ______ reason, the dog started barking uncontrollably.' }
+        ],
+        userAnswers: Array(9).fill(''),
+        correctAnswers: [
+            'summit', // The climbers reached the ______ of the mountain after a long, difficult journey.
+            'side', // From the ______ of the valley, we could see the houses dotted across the hills.
+            'Initially', // ______, I thought it was a good idea, but I later changed my mind.
+            'sense', // She was staring out of the window, overwhelmed by a ______ of childhood nostalgia.
+            'To my', // ______ surprise, the restaurant was still open despite the late hour.
+            'uncanny', // The strange coincidence left me with an ______ feeling.
+            'finger', // I couldn’t put my ______ on what was bothering me about the situation.
+            'thought', // He told me the news, but I didn’t give it much ______.
+            'apparent' // For no ______ reason, the dog started barking uncontrollably.
+        ],
+        showCorrectAnswers: false,
+        resultMessage: ''
+    },
+    computed: {
+        score() {
+            let count = 0;
+            this.userAnswers.forEach((answer, index) => {
+                if (answer.trim().toLowerCase() === this.correctAnswers[index].toLowerCase()) {
+                    count++;
+                }
+            });
+            return count;
+        }
+    },
+    watch: {
+        userAnswers: {
+            handler() {
+                this.updateResultMessage();
+            },
+            deep: true
+        }
+    },
+    methods: {
+        checkAnswers() {
+            this.showCorrectAnswers = true;
+        },
+        updateResultMessage() {
+            this.resultMessage = `You got ${this.score} out of ${this.sentences.length} correct!`;
+        }
+    },
+    created() {
+        this.updateResultMessage();
+    }
+});
+</script>
+
+<!--------------------->
+
+<div id="app3" class="quiz-container">
+    <h4>Quiz 1 / Part 3: Multiple Choice</h4>
+    <div v-for="(question, index) in questions" :key="index" class="question">
+        <label>{{ index + 18 }}. {{ question.text }}</label>
+        <div v-for="(option, oIndex) in question.options" :key="oIndex">
+            <input 
+                type="radio" 
+                :name="'question' + index" 
+                :value="option" 
+                v-model="userAnswers[index]" 
+            />
+            {{ option }}
+        </div>
+    </div>
+    <button class="btn btn-primary" @click="checkAnswers">Check Answers</button>
+    <div class="result" v-if="resultMessage">{{ resultMessage }}</div>
+    
+    <div class="answers" v-if="showCorrectAnswers">
+        <h3>Answers:</h3>
+        <p><em>(Green indicates correct answers, red indicates wrong answers)</em></p>
+        <ul>
+            <li v-for="(question, index) in questions" :key="index">
+                {{ index + 18 }}. 
+                <span :class="{'correct': userAnswers[index] === correctAnswers[index], 'incorrect': userAnswers[index] !== correctAnswers[index]}">
+                    {{ correctAnswers[index] }}
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script>
+new Vue({
+    el: '#app3',
+    data: {
+        questions: [
+            {
+                text: 'If you feel compelled to do something, you:',
+                options: ['A) Feel forced to do it.', 'B) Do it without much thought.', 'C) Think about doing it but decide not to.']
+            },
+            {
+                text: '"I couldn’t put my finger on it" means:',
+                options: ['A) I knew exactly what was wrong.', 'B) I had no idea what was wrong.', 'C) I couldn’t quite identify or explain what was wrong.']
+            },
+            {
+                text: 'If something happens "for no apparent reason," it:',
+                options: ['A) Has a clear and logical explanation.', 'B) Happens without an obvious cause.', 'C) Is very strange but understandable.']
+            },
+            {
+                text: '"To find yourself doing something" suggests:',
+                options: ['A) You plan something carefully and then act on it.', 'B) You realize you are doing something without intending to.', 'C) You are aware of every decision you make.']
+            },
+            {
+                text: '"I couldn’t quite do something" implies:',
+                options: ['A) I succeeded completely.', 'B) I tried but didn’t fully succeed.', 'C) I didn’t even attempt it.']
+            }
+        ],
+        userAnswers: Array(5).fill(''),
+        correctAnswers: [
+            'A) Feel forced to do it.',
+            'C) I couldn’t quite identify or explain what was wrong.',
+            'B) Happens without an obvious cause.',
+            'B) You realize you are doing something without intending to.',
+            'B) I tried but didn’t fully succeed.'
+        ],
+        resultMessage: '',
+        showCorrectAnswers: false
+    },
+    methods: {
+        checkAnswers() {
+            let score = 0;
+            this.userAnswers.forEach((answer, index) => {
+                if (answer === this.correctAnswers[index]) {
+                    score++;
+                }
+            });
+
+            this.resultMessage = `You got ${score} out of ${this.questions.length} correct!`;
+            this.showCorrectAnswers = true;
+        }
+    },
+    watch: {
+        userAnswers: {
+            handler() {
+                this.resultMessage = '';
+                this.showCorrectAnswers = false;
+            },
+            deep: true
+        }
+    }
+});
+</script>
+
+<!--------------------->
+
+<div id="app4" class="quiz-container">
+    <h4>Quiz 1 / Part 4: Synonyms</h4>
+    <div v-for="(item, index) in synonyms" :key="index" class="sentence">
+        <label>{{ index + 23 }}. {{ item.text }}</label>
+        <input type="text" v-model="userAnswers[index]" @input="updateCounter" :placeholder="item.correctAnswer[0] + '...'" />
+    </div>
+    <button class="btn btn-primary" @click="checkAnswers">Check Answers</button>
+    <div class="result">{{ resultMessage }}</div>
+    
+    <div class="answers" v-if="showCorrectAnswers">
+        <h3>Answers:</h3>
+        <p><em>(Green indicates correct answers, red indicates wrong answers)</em></p>
+        <ul>
+            <li v-for="(item, index) in synonyms" :key="index">
+                {{ index + 23 }}. 
+                <span :class="{'correct': isCorrectAnswer(index), 'incorrect': !isCorrectAnswer(index)}">
+                    {{ item.correctAnswer }}
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script>
+new Vue({
+    el: '#app4',
+    data: {
+        synonyms: [
+            { text: 'Far away from other people/things:', correctAnswer: 'Remote' },
+            { text: 'Disconnected or alone:', correctAnswer: 'Isolated' },
+            { text: 'To begin with:', correctAnswer: 'Initially' },
+            { text: 'Strange and unsettling:', correctAnswer: 'Uncanny' },
+            { text: 'Only:', correctAnswer: 'Mere' },
+            { text: 'To look intently:', correctAnswer: 'Gaze' },
+            { text: 'A strong memory or longing for the past/childhood:', correctAnswer: 'Nostalgia' },
+            { text: 'A strong feeling of familiarity:', correctAnswer: 'Deja vu' }
+        ],
+        userAnswers: Array(8).fill(''),
+        resultMessage: '',
+        showCorrectAnswers: false,
+        answerCount: 0
+    },
+    methods: {
+        checkAnswers() {
+            this.updateCounter(); // Update the counter when checking answers
+            this.showCorrectAnswers = true; // Show correct answers after checking
+        },
+        updateCounter() {
+            let score = 0;
+            this.userAnswers.forEach((answer, index) => {
+                if (this.isCorrectAnswer(index)) {
+                    score++;
+                }
+            });
+            this.resultMessage = `You got ${score} out of ${this.synonyms.length} correct!`;
+        },
+        isCorrectAnswer(index) {
+            const correctAnswers = Array.isArray(this.synonyms[index].correctAnswer) ? this.synonyms[index].correctAnswer : [this.synonyms[index].correctAnswer];
+            return correctAnswers.some(correctAnswer => this.userAnswers[index].trim().toLowerCase() === correctAnswer.toLowerCase());
+        }
+    }
+});
+</script>
+
+<!--------------------->
+
+<div id="app5" class="quiz-container">
+    <h4>Quiz 1 / Part 5: Sentence Correction</h4>
+    <h5>Correct the underlined part of the sentences.</h5>
+    <div v-for="(sentence, index) in sentences" :key="index" class="sentence">
+        <label v-html="index + 31 + '. ' + sentence.text"></label>
+        <input type="text" v-model="userAnswers[index]" placeholder="Your correction here" />
+    </div>
+    <button class="btn btn-primary" @click="checkAnswers">Check Answers</button>
+    <div class="result" v-if="resultMessage">{{ resultMessage }}</div>
+    
+    <div class="answers" v-if="showCorrectAnswers">
+        <h3>Correct Answers:</h3>
+        <p><em>(Green indicates correct answers, red indicates wrong answers)</em></p>
+        <ul>
+            <li v-for="(sentence, index) in sentences" :key="index">
+                {{ index + 31 }}. 
+                <span :class="{'correct': userAnswers[index].trim().toLowerCase() === correctAnswers[index].toLowerCase(), 'incorrect': userAnswers[index].trim().toLowerCase() !== correctAnswers[index].toLowerCase()}">
+                    {{ correctAnswers[index] }}
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script>
+new Vue({
+    el: '#app5',
+    data: {
+        sentences: [
+            { text: '<u>At</u> my surprise, she decided to join the group.' },
+            { text: 'I didn’t think about it <u>lot</u>.' },
+            { text: 'They reached the <u>foot</u> of the mountain after climbing for five hours.' },
+            { text: 'He gave me the answer, but I didn’t give it <u>many</u> thought.' },
+            { text: 'She felt lost, for no <u>apparently</u> reason.' }
+        ],
+        userAnswers: Array(5).fill(''),
+        resultMessage: '',
+        showCorrectAnswers: false,
+        correctAnswers: [
+            'To', // 31. At my surprise, she decided to join the group.
+            'much', // 32. I didn’t think about it lot.
+            'summit', // 33. They reached the foot of the mountain after climbing for five hours.
+            'much', // 34. He gave me the answer, but I didn’t give it many thought.
+            'apparent' // 35. She felt lost, for no apparently reason.
+        ]
+    },
+    watch: {
+        userAnswers: {
+            handler() {
+                this.updateScore();
+            },
+            deep: true
+        }
+    },
+    methods: {
+        updateScore() {
+            let score = 0;
+            this.userAnswers.forEach((answer, index) => {
+                if (answer.trim().toLowerCase() === this.correctAnswers[index].toLowerCase()) {
+                    score++;
+                }
+            });
+
+            this.resultMessage = `You got ${score} out of ${this.sentences.length} correct!`;
+        },
+        checkAnswers() {
+            this.updateScore();
+            this.showCorrectAnswers = true; // Show correct answers after checking
+        }
+    }
+});
+</script>
+
+</body>
+</html>
