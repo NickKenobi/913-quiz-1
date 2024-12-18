@@ -40,7 +40,7 @@
     <h1>Quiz 1 / Part 5: Sentence Correction</h1>
     <h3>Correct the underlined part of the sentences.</h3>
     <div v-for="(sentence, index) in sentences" :key="index" class="sentence">
-        <label>{{ index + 31 }}. {{ sentence.text }}</label>
+        <label v-html="index + 31 + '. ' + sentence.text"></label>
         <input type="text" v-model="userAnswers[index]" placeholder="Your correction here" />
     </div>
     <button @click="checkAnswers">Check Answers</button>
@@ -65,11 +65,11 @@ new Vue({
     el: '#app',
     data: {
         sentences: [
-            { text: 'At my surprise, she decided to join the group.' },
-            { text: 'I didn’t think about it lot.' },
-            { text: 'They reached the foot of the mountain after climbing for five hours.' },
-            { text: 'He gave me the answer, but I didn’t give it many thought.' },
-            { text: 'She felt lost, for no apparently reason.' }
+            { text: '<u>At</u> my surprise, she decided to join the group.' },
+            { text: 'I didn’t think about it <u>lot</u>.' },
+            { text: 'They reached the <u>foot</u> of the mountain after climbing for five hours.' },
+            { text: 'He gave me the answer, but I didn’t give it <u>many</u> thought.' },
+            { text: 'She felt lost, for no <u>apparently</u> reason.' }
         ],
         userAnswers: Array(5).fill(''),
         resultMessage: '',
@@ -108,9 +108,6 @@ new Vue({
     }
 });
 </script>
-
-
-
 
 </body>
 </html>
