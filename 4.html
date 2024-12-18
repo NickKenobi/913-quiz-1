@@ -40,7 +40,7 @@
     <h1>Quiz 1 / Part 4: Synonyms</h1>
     <div v-for="(item, index) in synonyms" :key="index" class="sentence">
         <label>{{ index + 23 }}. {{ item.text }}</label>
-        <input type="text" v-model="userAnswers[index]" @input="updateCounter" placeholder="Your answer here" />
+        <input type="text" v-model="userAnswers[index]" @input="updateCounter" :placeholder="item.correctAnswer[0] + '...'" />
     </div>
     <button @click="checkAnswers">Check Answers</button>
     <div class="result">{{ resultMessage }}</div>
@@ -69,9 +69,9 @@ new Vue({
             { text: 'To begin with:', correctAnswer: 'Initially' },
             { text: 'Strange and unsettling:', correctAnswer: 'Uncanny' },
             { text: 'Only:', correctAnswer: 'Mere' },
-            { text: 'To look intently:', correctAnswer: 'To gaze' },
+            { text: 'To look intently:', correctAnswer: 'Gaze' },
             { text: 'A strong memory or longing for the past/childhood:', correctAnswer: 'Nostalgia' },
-            { text: 'A strong feeling of familiarity:', correctAnswer: ['Déjà vu', 'Deja vu'] }
+            { text: 'A strong feeling of familiarity:', correctAnswer: 'Deja vu' }
         ],
         userAnswers: Array(8).fill(''),
         resultMessage: '',
