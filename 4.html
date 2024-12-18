@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz 1 / Part 4: Synonyms</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .quiz-container {
+            max-width: 600px;
+            margin: auto;
+        }
+        .sentence {
+            margin: 10px 0;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .answers {
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app" class="quiz-container">
+    <h1>Quiz 1 / Part 4: Synonyms</h1>
+    <div v-for="(item, index) in synonyms" :key="index" class="sentence">
+        <label>{{ index + 23 }}. {{ item.text }}</label>
+        <input type="text" v-model="userAnswers[index]" @input="updateCounter" placeholder="Your answer here" />
+    </div>
+    <button @click="checkAnswers">Check Answers</button>
+    <div class="result">{{ resultMessage }}</div>
+    
+    <div class="answers" v-if="showCorrectAnswers">
+        <h3>Answers:</h3>
+        <p><em>(Green indicates correct answers, red indicates wrong answers)</em></p>
+        <ul>
+            <li v-for="(item, index) in synonyms" :key="index">
+                {{ index + 23 }}. 
+                <span :class="{'correct': isCorrectAnswer(index), 'incorrect': !isCorrectAnswer(index)}">
+                    {{ item.correctAnswer }}
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script>
+new Vue({
+    el: '#app',
+    data: {
+        synonyms: [
+            { text: 'Far away from other people/things:', correctAnswer: 'Remote' },
+            { text: 'Disconnected or alone:', correctAnswer: 'Isolated' },
+            { text: 'To begin with:', correctAnswer: 'Initially' },
+            { text: 'Strange and unsettling:', correctAnswer: 'Uncanny' },
+            { text: 'Only:', correctAnswer: 'Mere' },
+            { text: 'To look intently:', correctAnswer: 'To gaze' },
+            { text: 'A strong memory or longing for the past/childhood:', correctAnswer: 'Nostalgia' },
+            { text: 'A strong feeling of familiarity:', correctAnswer: ['Déjà vu', 'Deja vu'] }
+        ],
+        userAnswers: Array(8).fill(''),
+        resultMessage: '',
+        showCorrectAnswers: false,
+        answerCount: 0
+    },
+    methods: {
+        checkAnswers() {
+            this.updateCounter(); // Update the counter when checking answers
+            this.showCorrectAnswers = true; // Show correct answers after checking
+        },
+        updateCounter() {
+            let score = 0;
+            this.userAnswers.forEach((answer, index) => {
+                if (this.isCorrectAnswer(index)) {
+                    score++;
+                }
+            });
+            this.resultMessage = `You got ${score} out of ${this.synonyms.length} correct!`;
+        },
+        isCorrectAnswer(index) {
+            const correctAnswers = Array.isArray(this.synonyms[index].correctAnswer) ? this.synonyms[index].correctAnswer : [this.synonyms[index].correctAnswer];
+            return correctAnswers.some(correctAnswer => this.userAnswers[index].trim().toLowerCase() === correctAnswer.toLowerCase());
+        }
+    }
+});
+</script>
+
+</body>
+</html>

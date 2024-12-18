@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz 1 / Part 1: Matching</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .quiz-container {
+            max-width: 600px;
+            margin: auto;
+        }
+        .word, .meaning {
+            margin: 10px 0;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .answers {
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app" class="quiz-container">
+    <h2>Quiz 1 / Part 1: Matching</h2>
+    <h3>Match the Word or Phrase to Its Meaning</h3>
+    <div v-for="(word, index) in words" :key="index" class="word">
+        <label>{{ index + 1 }}. {{ word.text }}</label>
+        <select v-model="userAnswers[index]">
+            <option value="">Select Meaning</option>
+            <option v-for="(meaning, mIndex) in meanings" :key="mIndex" :value="meaning.text">
+                {{ meaning.text }}
+            </option>
+        </select>
+    </div>
+    <button @click="checkAnswers">Check Answers</button>
+    <div class="result">{{ resultMessage }}</div>
+    
+    <div class="answers" v-if="showCorrectAnswers">
+        <h3>Answers:</h3>
+        <p><em>(Green indicates correct answers, red indicates wrong answers)</em></p>
+        <ul>
+            <li v-for="(word, index) in words" :key="index">
+                {{ word.text }}: 
+                <span :class="{'correct': userAnswers[index] === correctAnswers[index], 'incorrect': userAnswers[index] !== correctAnswers[index]}">
+                    {{ correctAnswers[index] }}
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script>
+new Vue({
+    el: '#app',
+    data: {
+        words: [
+            { text: 'Remote' },
+            { text: 'Isolated' },
+            { text: 'Initially' },
+            { text: 'Uncanny' },
+            { text: 'Mere' },
+            { text: 'Déjà vu' },
+            { text: 'A sense of childhood nostalgia' },
+            { text: 'To gaze' }
+        ],
+        meanings: [
+            { text: 'A. Strange and mysterious, often in a way that feels almost supernatural.' },
+            { text: 'B. A feeling of familiarity with a situation, as if it has happened before.' },
+            { text: 'C. Far away from other places, people, or civilization.' },
+            { text: 'D. Alone or disconnected from others.' },
+            { text: 'E. Only; nothing more than.' },
+            { text: 'F. At the beginning.' },
+            { text: 'G. A longing for or fond memories of one’s younger years.' },
+            { text: 'H. To look steadily and intently, often in admiration or deep thought.' }
+        ],
+        userAnswers: Array(8).fill(''),
+        correctAnswers: [
+            'C. Far away from other places, people, or civilization.', // Remote
+            'D. Alone or disconnected from others.', // Isolated
+            'F. At the beginning.', // Initially
+            'A. Strange and mysterious, often in a way that feels almost supernatural.', // Uncanny
+            'E. Only; nothing more than.', // Mere
+            'B. A feeling of familiarity with a situation, as if it has happened before.', // Déjà vu
+            'G. A longing for or fond memories of one’s younger years.', // A sense of childhood nostalgia
+            'H. To look steadily and intently, often in admiration or deep thought.' // To gaze
+        ],
+        showCorrectAnswers: false
+    },
+    computed: {
+        resultMessage() {
+            if (!this.showCorrectAnswers) {
+                return '';
+            }
+            let score = 0;
+            this.userAnswers.forEach((answer, index) => {
+                if (answer === this.correctAnswers[index]) {
+                    score++;
+                }
+            });
+            return `You got ${score} out of ${this.words.length} correct!`;
+        }
+    },
+    methods: {
+        checkAnswers() {
+            this.showCorrectAnswers = true;
+        }
+    }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz 1 / Part 5: Sentence Correction</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .quiz-container {
+            max-width: 600px;
+            margin: auto;
+        }
+        .sentence {
+            margin: 10px 0;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .answers {
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app" class="quiz-container">
+    <h1>Quiz 1 / Part 5: Sentence Correction</h1>
+    <h3>Correct the underlined part of the sentences.</h3>
+    <div v-for="(sentence, index) in sentences" :key="index" class="sentence">
+        <label>{{ index + 31 }}. {{ sentence.text }}</label>
+        <input type="text" v-model="userAnswers[index]" placeholder="Your correction here" />
+    </div>
+    <button @click="checkAnswers">Check Answers</button>
+    <div class="result" v-if="resultMessage">{{ resultMessage }}</div>
+    
+    <div class="answers" v-if="showCorrectAnswers">
+        <h3>Correct Answers:</h3>
+        <p><em>(Green indicates correct answers, red indicates wrong answers)</em></p>
+        <ul>
+            <li v-for="(sentence, index) in sentences" :key="index">
+                {{ index + 31 }}. 
+                <span :class="{'correct': userAnswers[index].trim().toLowerCase() === correctAnswers[index].toLowerCase(), 'incorrect': userAnswers[index].trim().toLowerCase() !== correctAnswers[index].toLowerCase()}">
+                    {{ correctAnswers[index] }}
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script>
+new Vue({
+    el: '#app',
+    data: {
+        sentences: [
+            { text: 'At my surprise, she decided to join the group.' },
+            { text: 'I didn’t think about it lot.' },
+            { text: 'They reached the foot of the mountain after climbing for five hours.' },
+            { text: 'He gave me the answer, but I didn’t give it many thought.' },
+            { text: 'She felt lost, for no apparently reason.' }
+        ],
+        userAnswers: Array(5).fill(''),
+        resultMessage: '',
+        showCorrectAnswers: false,
+        correctAnswers: [
+            'To', // 31. At my surprise, she decided to join the group.
+            'much', // 32. I didn’t think about it lot.
+            'summit', // 33. They reached the foot of the mountain after climbing for five hours.
+            'much', // 34. He gave me the answer, but I didn’t give it many thought.
+            'apparent' // 35. She felt lost, for no apparently reason.
+        ]
+    },
+    watch: {
+        userAnswers: {
+            handler() {
+                this.updateScore();
+            },
+            deep: true
+        }
+    },
+    methods: {
+        updateScore() {
+            let score = 0;
+            this.userAnswers.forEach((answer, index) => {
+                if (answer.trim().toLowerCase() === this.correctAnswers[index].toLowerCase()) {
+                    score++;
+                }
+            });
+
+            this.resultMessage = `You got ${score} out of ${this.sentences.length} correct!`;
+        },
+        checkAnswers() {
+            this.updateScore();
+            this.showCorrectAnswers = true; // Show correct answers after checking
+        }
+    }
+});
+</script>
+
+
+
+
+</body>
+</html>

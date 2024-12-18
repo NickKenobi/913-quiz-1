@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fill in the Blanks Quiz</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .quiz-container {
+            max-width: 600px;
+            margin: auto;
+        }
+        .sentence {
+            margin: 10px 0;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .answers {
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app" class="quiz-container">
+    <h1>Quiz 1 / Part 2: Fill in the Blanks</h1>
+    <div v-for="(sentence, index) in sentences" :key="index" class="sentence">
+        <label>{{ index + 9 }}. {{ sentence.text }}</label>
+        <input type="text" v-model="userAnswers[index]" placeholder="Your answer here" />
+    </div>
+    <button @click="checkAnswers">Check Answers</button>
+    <div class="result">{{ resultMessage }}</div>
+    
+    <div class="answers" v-if="showCorrectAnswers">
+        <h3>Answers:</h3>
+        <p><em>(Green indicates correct answers, red indicates wrong answers)</em></p>
+        <ul>
+            <li v-for="(sentence, index) in sentences" :key="index">
+                {{ index + 9 }}. 
+                <span :class="{'correct': userAnswers[index].trim().toLowerCase() === correctAnswers[index].toLowerCase(), 'incorrect': userAnswers[index].trim().toLowerCase() !== correctAnswers[index].toLowerCase()}">
+                    {{ correctAnswers[index] }}
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script>
+new Vue({
+    el: '#app',
+    data: {
+        sentences: [
+            { text: 'The climbers reached the ______ of the mountain after a long, difficult journey.' },
+            { text: 'From the ______ of the valley, we could see the houses dotted across the hills.' },
+            { text: '______, I thought it was a good idea, but I later changed my mind.' },
+            { text: 'She was staring out of the window, overwhelmed by a ______ of childhood nostalgia.' },
+            { text: '______ surprise, the restaurant was still open despite the late hour.' },
+            { text: 'The strange coincidence left me with an ______ feeling.' },
+            { text: 'I couldn’t put my ______ on what was bothering me about the situation.' },
+            { text: 'He told me the news, but I didn’t give it much ______.' },
+            { text: 'For no ______ reason, the dog started barking uncontrollably.' }
+        ],
+        userAnswers: Array(9).fill(''),
+        correctAnswers: [
+            'summit', // The climbers reached the ______ of the mountain after a long, difficult journey.
+            'side', // From the ______ of the valley, we could see the houses dotted across the hills.
+            'Initially', // ______, I thought it was a good idea, but I later changed my mind.
+            'sense', // She was staring out of the window, overwhelmed by a ______ of childhood nostalgia.
+            'To my', // ______ surprise, the restaurant was still open despite the late hour.
+            'uncanny', // The strange coincidence left me with an ______ feeling.
+            'finger', // I couldn’t put my ______ on what was bothering me about the situation.
+            'thought', // He told me the news, but I didn’t give it much ______.
+            'apparent' // For no ______ reason, the dog started barking uncontrollably.
+        ],
+        showCorrectAnswers: false,
+        resultMessage: ''
+    },
+    computed: {
+        score() {
+            let count = 0;
+            this.userAnswers.forEach((answer, index) => {
+                if (answer.trim().toLowerCase() === this.correctAnswers[index].toLowerCase()) {
+                    count++;
+                }
+            });
+            return count;
+        }
+    },
+    watch: {
+        userAnswers: {
+            handler() {
+                this.updateResultMessage();
+            },
+            deep: true
+        }
+    },
+    methods: {
+        checkAnswers() {
+            this.showCorrectAnswers = true;
+        },
+        updateResultMessage() {
+            this.resultMessage = `You got ${this.score} out of ${this.sentences.length} correct!`;
+        }
+    },
+    created() {
+        this.updateResultMessage();
+    }
+});
+</script>
+
+</body>
+</html>

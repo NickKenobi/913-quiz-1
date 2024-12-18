@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz 1 / Part 3: Multiple Choice</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .quiz-container {
+            max-width: 600px;
+            margin: auto;
+        }
+        .question {
+            margin: 15px 0;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .answers {
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app" class="quiz-container">
+    <h1>Quiz 1 / Part 3: Multiple Choice</h1>
+    <div v-for="(question, index) in questions" :key="index" class="question">
+        <label>{{ index + 18 }}. {{ question.text }}</label>
+        <div v-for="(option, oIndex) in question.options" :key="oIndex">
+            <input 
+                type="radio" 
+                :name="'question' + index" 
+                :value="option" 
+                v-model="userAnswers[index]" 
+            />
+            {{ option }}
+        </div>
+    </div>
+    <button @click="checkAnswers">Check Answers</button>
+    <div class="result" v-if="resultMessage">{{ resultMessage }}</div>
+    
+    <div class="answers" v-if="showCorrectAnswers">
+        <h3>Answers:</h3>
+        <p><em>(Green indicates correct answers, red indicates wrong answers)</em></p>
+        <ul>
+            <li v-for="(question, index) in questions" :key="index">
+                {{ index + 18 }}. 
+                <span :class="{'correct': userAnswers[index] === correctAnswers[index], 'incorrect': userAnswers[index] !== correctAnswers[index]}">
+                    {{ correctAnswers[index] }}
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script>
+new Vue({
+    el: '#app',
+    data: {
+        questions: [
+            {
+                text: 'If you feel compelled to do something, you:',
+                options: ['A) Feel forced to do it.', 'B) Do it without much thought.', 'C) Think about doing it but decide not to.']
+            },
+            {
+                text: '"I couldn’t put my finger on it" means:',
+                options: ['A) I knew exactly what was wrong.', 'B) I had no idea what was wrong.', 'C) I couldn’t quite identify or explain what was wrong.']
+            },
+            {
+                text: 'If something happens "for no apparent reason," it:',
+                options: ['A) Has a clear and logical explanation.', 'B) Happens without an obvious cause.', 'C) Is very strange but understandable.']
+            },
+            {
+                text: '"To find yourself doing something" suggests:',
+                options: ['A) You plan something carefully and then act on it.', 'B) You realize you are doing something without intending to.', 'C) You are aware of every decision you make.']
+            },
+            {
+                text: '"I couldn’t quite do something" implies:',
+                options: ['A) I succeeded completely.', 'B) I tried but didn’t fully succeed.', 'C) I didn’t even attempt it.']
+            }
+        ],
+        userAnswers: Array(5).fill(''),
+        correctAnswers: [
+            'A) Feel forced to do it.',
+            'C) I couldn’t quite identify or explain what was wrong.',
+            'B) Happens without an obvious cause.',
+            'B) You realize you are doing something without intending to.',
+            'B) I tried but didn’t fully succeed.'
+        ],
+        resultMessage: '',
+        showCorrectAnswers: false
+    },
+    methods: {
+        checkAnswers() {
+            let score = 0;
+            this.userAnswers.forEach((answer, index) => {
+                if (answer === this.correctAnswers[index]) {
+                    score++;
+                }
+            });
+
+            this.resultMessage = `You got ${score} out of ${this.questions.length} correct!`;
+            this.showCorrectAnswers = true;
+        }
+    },
+    watch: {
+        userAnswers: {
+            handler() {
+                this.resultMessage = '';
+                this.showCorrectAnswers = false;
+            },
+            deep: true
+        }
+    }
+});
+</script>
+
+</body>
+</html>
